@@ -1,0 +1,10 @@
+{
+  "name": "HeartSync by SHAKI",
+  "short_name": "HeartSync",
+  "description": "HeartSync AI 智能设备与亲密健康体验",
+  "start_url": "/#home",
+  "display": "standalone",
+  "background_color": "#f7f5f2",
+  "theme_color": "#3a204a",
+  "lang": "zh-CN"
+}

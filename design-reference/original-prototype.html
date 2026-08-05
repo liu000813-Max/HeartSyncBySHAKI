@@ -1,0 +1,3000 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHAKI APP Design</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    padding: 24px;
+  }
+
+  .showcase {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transform-origin: top center;
+  }
+
+  .phone-frame {
+    width: 375px;
+    height: 812px;
+    background: #fff;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+    flex-shrink: 0;
+  }
+
+  .screen {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ===== COMMON COMPONENTS ===== */
+  .nav-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 10;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .nav-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .logo-text {
+    text-align: center;
+  }
+  .logo-text .brand {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #0f0f0f;
+    text-transform: uppercase;
+  }
+  .logo-text .since {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: #999;
+    text-transform: uppercase;
+    margin-top: -2px;
+  }
+  .logo-line {
+    width: 60px;
+    height: 1px;
+    background: #0f0f0f;
+    margin: 2px auto;
+  }
+
+  .bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: #fff;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: 12px;
+    z-index: 10;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+  .nav-item svg { width: 22px; height: 22px; }
+  .nav-item span {
+    font-size: 10px;
+    color: #bbb;
+    letter-spacing: 0.5px;
+  }
+  .nav-item.active span { color: #7C3AED; }
+  .nav-item.active svg path,
+  .nav-item.active svg rect,
+  .nav-item.active svg circle { fill: #7C3AED; }
+
+  /* ===== PAGE 1: HERO ===== */
+  .p1 .hero-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 460px;
+    background: linear-gradient(160deg, #1a0533 0%, #2D1B69 30%, #7C3AED 70%, #C4B5FD 100%);
+    overflow: hidden;
+  }
+
+  .p1 .hero-area::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 140px;
+    background: linear-gradient(to bottom, transparent, #fff);
+  }
+
+  .p1 .model-silhouette {
+    position: absolute;
+    right: 20px;
+    bottom: 0;
+    width: 220px;
+    height: 380px;
+    opacity: 0.85;
+  }
+
+  .p1 .hero-content {
+    position: absolute;
+    top: 80px;
+    left: 24px;
+    right: 24px;
+    z-index: 2;
+  }
+
+  .p1 .hero-accent {
+    width: 3px;
+    height: 60px;
+    background: linear-gradient(to bottom, #C4B5FD, transparent);
+    margin-bottom: 16px;
+  }
+
+  .p1 .hero-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .p1 .hero-sub {
+    font-size: 13px;
+    color: #C4B5FD;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .p1 .cta-row {
+    display: flex;
+    gap: 12px;
+    position: absolute;
+    top: 430px;
+    left: 24px;
+    right: 24px;
+    z-index: 5;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    flex: 1;
+    box-shadow: 0 8px 24px rgba(124,58,237,0.35);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: #7C3AED;
+    border: 1.5px solid #7C3AED;
+    border-radius: 24px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .p1 .carousel-section {
+    position: absolute;
+    top: 502px;
+    left: 0;
+    right: 0;
+    padding: 0 24px;
+  }
+
+  .p1 .carousel-title {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #999;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .p1 .carousel-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: hidden;
+  }
+
+  .product-card {
+    min-width: 150px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .product-card .img-area {
+    height: 130px;
+    background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 50%, #C4B5FD 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .product-card .img-area svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.6;
+  }
+
+  .product-card .card-body {
+    padding: 10px 12px 12px;
+  }
+
+  .product-card .pname {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 13px;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+  }
+
+  .product-card .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .product-card .price {
+    font-size: 14px;
+    font-weight: 600;
+    color: #7C3AED;
+  }
+
+  .product-card .add-btn {
+    width: 26px;
+    height: 26px;
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+  }
+
+  .p1 .dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #EDE9FE;
+  }
+  .dot.active {
+    background: #7C3AED;
+    width: 18px;
+    border-radius: 3px;
+  }
+
+  /* ===== PAGE 2: EXPLORE ===== */
+  .p2 .page-content {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 80px;
+    overflow-y: auto;
+    padding: 16px 20px;
+  }
+
+  .p2 .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .page-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f0f0f;
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #F5F3FF;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+  }
+  .search-bar input {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    flex: 1;
+  }
+  .search-bar input::placeholder { color: #bbb; }
+
+  .tags-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: hidden;
+    margin-bottom: 20px;
+  }
+
+  .tag {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .tag.active {
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    color: #fff;
+  }
+  .tag.inactive {
+    background: #fff;
+    color: #888;
+    border: 1px solid #e5e5e5;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .grid-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    position: relative;
+  }
+
+  .grid-card .img-area {
+    height: 150px;
+    background: linear-gradient(160deg, #EDE9FE 0%, #DDD6FE 60%, #C4B5FD 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .new-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .grid-card .card-footer {
+    padding: 10px 12px 12px;
+  }
+
+  .grid-card .pname {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 13px;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .grid-card .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .grid-card .price {
+    font-size: 14px;
+    font-weight: 600;
+    color: #7C3AED;
+  }
+
+  .heart-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* ===== PAGE 3: BLUETOOTH ===== */
+  .p3 .back-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .back-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .p3 .page-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #0f0f0f;
+  }
+
+  .p3 .bt-center {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .pulse-rings {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid rgba(124,58,237,0.3);
+    animation: pulse-ring 2.5s ease-out infinite;
+  }
+  .ring:nth-child(1) { width: 200px; height: 200px; animation-delay: 0s; }
+  .ring:nth-child(2) { width: 160px; height: 160px; animation-delay: 0.5s; }
+  .ring:nth-child(3) { width: 120px; height: 120px; animation-delay: 1s; }
+
+  @keyframes pulse-ring {
+    0% { transform: scale(0.8); opacity: 0.8; }
+    70% { transform: scale(1); opacity: 0.1; }
+    100% { transform: scale(1); opacity: 0; }
+  }
+
+  .bt-core {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(124,58,237,0.5);
+    z-index: 2;
+  }
+
+  .searching-text {
+    font-size: 14px;
+    color: #888;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  .dots-anim::after {
+    content: '';
+    animation: ellipsis 1.5s infinite;
+  }
+  @keyframes ellipsis {
+    0% { content: '.'; }
+    33% { content: '..'; }
+    66% { content: '...'; }
+    100% { content: ''; }
+  }
+
+  .p3 .devices-section {
+    position: absolute;
+    top: 320px;
+    left: 0;
+    right: 0;
+    padding: 0 20px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    color: #bbb;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .device-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .device-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .device-icon.connected { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); }
+  .device-icon.disconnected { background: #f5f5f5; }
+
+  .device-info { flex: 1; }
+  .device-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 3px;
+  }
+  .device-status {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .status-dot.green { background: #22c55e; }
+  .status-dot.gray { background: #ccc; }
+  .status-connected { color: #7C3AED; font-weight: 500; }
+  .status-disconnected { color: #aaa; }
+
+  .signal-bars { display: flex; align-items: flex-end; gap: 2px; }
+  .bar { width: 3px; border-radius: 1px; background: #7C3AED; }
+
+  .p3 .add-device-btn {
+    position: absolute;
+    bottom: 96px;
+    left: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 16px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(124,58,237,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* ===== PAGE 4: HEART RATE ===== */
+  .p4 .page-content {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 80px;
+    overflow-y: auto;
+    padding: 16px 20px;
+    scrollbar-width: none;
+  }
+  .p4 .page-content::-webkit-scrollbar { display: none; }
+
+  .p4 .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6B21A8;
+    letter-spacing: 0.5px;
+  }
+
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #7C3AED;
+    animation: live-pulse 1.2s ease-in-out infinite;
+  }
+
+  @keyframes live-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .hr-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  .hr-label {
+    font-size: 11px;
+    color: #bbb;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .hr-value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .hr-number {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 72px;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hr-unit {
+    font-size: 16px;
+    color: #aaa;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  .wave-container {
+    height: 80px;
+    background: #FAFAFA;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    position: relative;
+    border: 1px solid #F0EEFF;
+  }
+
+  /* Grid lines */
+  .wave-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,58,237,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,58,237,0.06) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .wave-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    animation: wave-scroll 3s linear infinite;
+  }
+
+  @keyframes wave-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .hr-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: 8px 0;
+  }
+  .stat-item:not(:last-child) {
+    border-right: 1px solid #f0f0f0;
+  }
+  .stat-label {
+    font-size: 10px;
+    color: #ccc;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .stat-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .trend-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+  }
+
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 70px;
+    margin-bottom: 8px;
+  }
+
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  .bar-fill {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    background: linear-gradient(to top, #C4B5FD, #7C3AED);
+    opacity: 0.5;
+    transition: all 0.3s;
+  }
+  .bar-fill.today {
+    background: linear-gradient(to top, #6B21A8, #7C3AED);
+    opacity: 1;
+  }
+
+  .bar-label {
+    font-size: 9px;
+    color: #ccc;
+    letter-spacing: 0.5px;
+  }
+
+  .mood-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .mood-circle {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+
+  .mood-circle svg {
+    width: 80px;
+    height: 80px;
+    transform: rotate(-90deg);
+  }
+
+  .mood-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mood-pct {
+    font-size: 16px;
+    font-weight: 700;
+    color: #6B21A8;
+    line-height: 1;
+  }
+
+  .mood-info .mood-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+  }
+
+  .mood-info .mood-sub {
+    font-size: 12px;
+    color: #aaa;
+    line-height: 1.5;
+  }
+
+  /* Label titles for phone frames */
+  .screen-label {
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .phone-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  /* ===== PAGE 6: COUPLE SYNC ===== */
+  .p6 .couple-nav {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+  }
+  .p6 .couple-nav .nav-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f0f0f;
+    white-space: nowrap;
+  }
+  .p6 .online-pill {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 5px;
+    background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px; font-weight: 600; color: #6B21A8;
+  }
+  .p6 .online-pill .odot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #7C3AED;
+    animation: live-pulse 1.4s ease-in-out infinite;
+  }
+
+  .p6 .page-content {
+    position: absolute;
+    top: 64px; left: 0; right: 0; bottom: 80px;
+    overflow-y: auto;
+    padding: 16px 20px;
+    scrollbar-width: none;
+  }
+  .p6 .page-content::-webkit-scrollbar { display: none; }
+
+  /* Distance indicator */
+  .dist-banner {
+    background: linear-gradient(135deg, #F5F3FF, #EDE9FE);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #DDD6FE;
+  }
+  .dist-icon { font-size: 22px; }
+  .dist-info { flex: 1; }
+  .dist-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+    color: #6B21A8;
+  }
+  .dist-sub { font-size: 11px; color: #9C6FE4; margin-top: 1px; }
+  .dist-ping {
+    font-size: 11px; font-weight: 600;
+    color: #22c55e;
+    background: #F0FDF4;
+    border-radius: 8px;
+    padding: 4px 8px;
+  }
+
+  /* Couple orbs */
+  .couple-orbs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 16px;
+    position: relative;
+    height: 200px;
+  }
+
+  .orb-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  .orb {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(124,58,237,0.3);
+  }
+  .orb-me {
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+  }
+  .orb-partner {
+    background: linear-gradient(135deg, #9D4EDD, #C084FC);
+  }
+  .orb-pulse {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px solid rgba(124,58,237,0.3);
+    animation: dial-pulse 2s ease-out infinite;
+  }
+  .orb-pulse:nth-of-type(2) {
+    inset: -18px;
+    border-color: rgba(124,58,237,0.15);
+    animation-delay: 0.4s;
+  }
+  .orb-bpm {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: #fff; line-height: 1;
+  }
+  .orb-unit { font-size: 9px; color: rgba(255,255,255,0.8); letter-spacing: 1px; }
+  .orb-label {
+    font-size: 11px; font-weight: 600; color: #4c1d95;
+    letter-spacing: 0.5px;
+  }
+  .orb-name { font-size: 12px; font-weight: 600; color: #1a1a1a; }
+
+  /* Connection bridge */
+  .bridge-wrap {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -80px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    z-index: 1;
+  }
+  .bridge-line {
+    width: 100px; height: 2px;
+    background: linear-gradient(90deg, #7C3AED, #C084FC, #7C3AED);
+    background-size: 200% 100%;
+    border-radius: 1px;
+    animation: flow-anim 1.5s linear infinite;
+    position: relative;
+  }
+  /* Travelling dot on bridge */
+  .bridge-dot {
+    position: absolute;
+    top: 50%; left: 0;
+    transform: translateY(-50%);
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 6px #7C3AED;
+    animation: travel 1.5s linear infinite;
+  }
+  @keyframes travel {
+    0% { left: 0; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { left: calc(100% - 8px); opacity: 0; }
+  }
+  .bridge-tag {
+    font-size: 10px; font-weight: 600; color: #7C3AED;
+    background: #EDE9FE; border-radius: 8px;
+    padding: 2px 8px; letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  /* Sync mode cards */
+  .sync-modes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .sync-mode-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .sync-mode-card.active {
+    border-color: #7C3AED;
+    background: linear-gradient(135deg, #FDFAFF, #F5F0FF);
+  }
+  .sync-mode-card .sm-icon { font-size: 22px; margin-bottom: 6px; }
+  .sync-mode-card .sm-name {
+    font-size: 13px; font-weight: 700; color: #1a1a1a;
+    margin-bottom: 3px;
+  }
+  .sync-mode-card.active .sm-name { color: #6B21A8; }
+  .sync-mode-card .sm-desc { font-size: 11px; color: #aaa; line-height: 1.4; }
+  .active-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%; background: #7C3AED;
+    margin-left: 4px; vertical-align: middle;
+    animation: live-pulse 1.2s ease-in-out infinite;
+  }
+
+  /* Live message strip */
+  .msg-strip {
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 14px;
+  }
+  .msg-strip .ms-label {
+    font-size: 10px; color: #bbb;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .msg-bubble {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .msg-bubble.right { flex-direction: row-reverse; }
+  .msg-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0;
+  }
+  .msg-avatar.me { background: linear-gradient(135deg, #6B21A8, #7C3AED); }
+  .msg-avatar.partner { background: linear-gradient(135deg, #9D4EDD, #C084FC); }
+  .msg-text {
+    max-width: 170px;
+    padding: 8px 12px;
+    border-radius: 14px;
+    font-size: 12px; line-height: 1.4; color: #1a1a1a;
+    background: #F5F3FF;
+  }
+  .msg-bubble.right .msg-text {
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .msg-bubble:not(.right) .msg-text { border-bottom-left-radius: 4px; }
+
+  /* Shared intensity control */
+  .shared-ctrl {
+    background: linear-gradient(135deg, #F5F3FF, #EDE9FE);
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid #DDD6FE;
+    margin-bottom: 14px;
+  }
+  .sc-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .sc-title { font-size: 13px; font-weight: 700; color: #4c1d95; }
+  .sc-toggle {
+    width: 40px; height: 22px;
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    border-radius: 11px;
+    position: relative;
+    cursor: pointer;
+  }
+  .sc-toggle::after {
+    content: '';
+    position: absolute;
+    right: 3px; top: 3px;
+    width: 16px; height: 16px;
+    border-radius: 50%; background: #fff;
+  }
+  .sc-desc { font-size: 11px; color: #7C3AED; line-height: 1.5; }
+
+  /* ===== PAGE 5: AI SYNC ===== */
+  .p5 .sync-nav {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+  }
+  .p5 .sync-nav .nav-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f0f0f;
+    white-space: nowrap;
+  }
+  .p5 .sync-nav .connected-pill {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 5px;
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #16a34a;
+  }
+  .p5 .sync-nav .connected-pill .cdot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: live-pulse 1.2s ease-in-out infinite;
+  }
+
+  /* Data flow banner */
+  .sync-banner {
+    position: absolute;
+    top: 64px; left: 0; right: 0;
+    background: #F5F3FF;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+  }
+  .sync-banner .bt-icon-sm {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sync-banner .banner-info { flex: 1; }
+  .sync-banner .banner-dev { font-size: 12px; font-weight: 600; color: #1a1a1a; }
+  .sync-banner .banner-sub { font-size: 11px; color: #7C3AED; }
+  .sync-banner .flow-line {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #7C3AED, #C4B5FD, transparent);
+    background-size: 200% 100%;
+    animation: flow-anim 2s linear infinite;
+  }
+  @keyframes flow-anim {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+
+  /* Main dial */
+  .p5 .page-content {
+    position: absolute;
+    top: 116px; left: 0; right: 0; bottom: 80px;
+    overflow-y: auto;
+    padding: 16px 20px;
+    scrollbar-width: none;
+  }
+  .p5 .page-content::-webkit-scrollbar { display: none; }
+
+  .dial-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 8px 0 16px;
+  }
+  .dial-container {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dial-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 220px; height: 220px;
+    transform: rotate(-90deg);
+  }
+  /* Sync pulse rings on dial */
+  .dial-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(124,58,237,0.2);
+    animation: dial-pulse 2s ease-out infinite;
+  }
+  .dial-ring:nth-child(1) { width: 220px; height: 220px; animation-delay: 0s; }
+  .dial-ring:nth-child(2) { width: 185px; height: 185px; animation-delay: 0.4s; }
+  .dial-ring:nth-child(3) { width: 150px; height: 150px; animation-delay: 0.8s; }
+  @keyframes dial-pulse {
+    0% { opacity: 0.7; transform: scale(0.92); }
+    70% { opacity: 0.1; transform: scale(1); }
+    100% { opacity: 0; }
+  }
+  .dial-core {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6B21A8 0%, #7C3AED 60%, #A78BFA 100%);
+    box-shadow: 0 8px 36px rgba(124,58,237,0.45);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 2;
+    gap: 2px;
+  }
+  .dial-bpm-label { font-size: 10px; color: rgba(255,255,255,0.7); letter-spacing: 1px; }
+  .dial-bpm-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 700;
+    color: #fff; line-height: 1;
+  }
+  .dial-freq {
+    font-size: 11px; color: rgba(255,255,255,0.85);
+    letter-spacing: 0.5px;
+  }
+
+  /* Freq bar (right side of dial) */
+  .freq-bar-wrap {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    height: 90px;
+    justify-content: flex-end;
+  }
+  .freq-seg {
+    width: 8px;
+    border-radius: 2px;
+    background: linear-gradient(to top, #6B21A8, #A78BFA);
+    animation: freq-jump 0.6s ease-in-out infinite alternate;
+  }
+  .freq-seg:nth-child(1) { height: 10px; animation-delay: 0s; }
+  .freq-seg:nth-child(2) { height: 16px; animation-delay: 0.1s; }
+  .freq-seg:nth-child(3) { height: 22px; animation-delay: 0.2s; }
+  .freq-seg:nth-child(4) { height: 16px; animation-delay: 0.15s; }
+  .freq-seg:nth-child(5) { height: 10px; animation-delay: 0.05s; }
+  @keyframes freq-jump {
+    0% { transform: scaleY(0.6); opacity: 0.5; }
+    100% { transform: scaleY(1.3); opacity: 1; }
+  }
+
+  /* Mode selector */
+  .mode-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .mode-card {
+    border-radius: 12px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+    border: 1.5px solid #e5e5e5;
+    background: #fff;
+  }
+  .mode-card.active {
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    border-color: transparent;
+  }
+  .mode-card .mode-icon { font-size: 18px; margin-bottom: 4px; }
+  .mode-card .mode-name {
+    font-size: 11px; font-weight: 600;
+    color: #888; letter-spacing: 0.5px;
+  }
+  .mode-card.active .mode-name { color: #fff; }
+  .mode-card .mode-desc {
+    font-size: 9px; color: #bbb;
+    margin-top: 2px; line-height: 1.3;
+  }
+  .mode-card.active .mode-desc { color: rgba(255,255,255,0.7); }
+
+  /* Data flow cards */
+  .data-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .data-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .data-card .dc-label {
+    font-size: 10px; color: #bbb;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .data-card .dc-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700;
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+  .data-card .dc-sub { font-size: 11px; color: #aaa; }
+
+  /* Mini ECG line */
+  .mini-ecg {
+    overflow: hidden;
+    height: 28px;
+    position: relative;
+  }
+  .mini-ecg svg {
+    animation: wave-scroll 2.5s linear infinite;
+  }
+  @keyframes mini-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Mini equalizer */
+  .mini-eq {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 28px;
+  }
+  .eq-bar {
+    width: 5px;
+    border-radius: 2px;
+    background: linear-gradient(to top, #6B21A8, #A78BFA);
+    animation: freq-jump 0.5s ease-in-out infinite alternate;
+  }
+  .eq-bar:nth-child(1) { height: 10px; animation-delay: 0.0s; }
+  .eq-bar:nth-child(2) { height: 18px; animation-delay: 0.1s; }
+  .eq-bar:nth-child(3) { height: 24px; animation-delay: 0.05s; }
+  .trend-up { color: #22c55e; font-size: 11px; font-weight: 600; }
+
+  /* Intensity slider */
+  .intensity-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 14px;
+  }
+  .intensity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .intensity-title {
+    font-size: 12px; font-weight: 600; color: #1a1a1a; letter-spacing: 0.5px;
+  }
+  .intensity-val {
+    font-size: 12px; font-weight: 700; color: #7C3AED;
+  }
+  .slider-wrap {
+    position: relative;
+    height: 6px;
+    background: #EDE9FE;
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+  .slider-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 62%;
+    background: linear-gradient(90deg, #6B21A8, #7C3AED, #A78BFA);
+    border-radius: 3px;
+  }
+  .slider-thumb {
+    position: absolute;
+    left: 62%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    border: 2.5px solid #7C3AED;
+    box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+  }
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px; color: #bbb;
+  }
+
+  /* BPM zone legend */
+  .zone-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .zone-chip {
+    flex: 1;
+    border-radius: 8px;
+    padding: 8px 4px;
+    text-align: center;
+  }
+  .zone-chip .zone-range { font-size: 9px; font-weight: 600; letter-spacing: 0.5px; }
+  .zone-chip .zone-name { font-size: 10px; font-weight: 500; margin-top: 2px; }
+  .zone-chip .zone-freq { font-size: 9px; margin-top: 1px; }
+
+  /* ===== PAGE 7: PROFILE ===== */
+  .p7 .page-content {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 80px;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .p7 .page-content::-webkit-scrollbar { display: none; }
+
+  /* Hero cover */
+  .profile-cover {
+    height: 200px;
+    background: linear-gradient(160deg, #1a0533 0%, #3B0764 40%, #7C3AED 80%, #C4B5FD 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, #fff);
+  }
+  /* Abstract decorative circles on cover */
+  .cover-deco {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* Avatar area */
+  .avatar-row {
+    position: relative;
+    padding: 0 20px;
+    margin-top: -36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 12px;
+  }
+  .avatar-ring {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6B21A8, #7C3AED, #A78BFA);
+    padding: 3px;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+    position: relative;
+    z-index: 2;
+  }
+  .avatar-inner {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+    border: 2px solid #fff;
+  }
+  .vip-badge {
+    position: absolute;
+    bottom: -2px; right: -2px;
+    width: 22px; height: 22px;
+    background: linear-gradient(135deg, #F59E0B, #FBBF24);
+    border-radius: 50%;
+    border: 2px solid #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+  }
+  .edit-btn-profile {
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+    margin-bottom: 4px;
+  }
+
+  /* User info */
+  .user-info {
+    padding: 0 20px 16px;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .user-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: #0f0f0f;
+    margin-bottom: 3px;
+  }
+  .user-handle { font-size: 12px; color: #bbb; margin-bottom: 8px; }
+  .user-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .user-tag {
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px; font-weight: 500;
+  }
+  .tag-vip { background: linear-gradient(135deg, #FEF3C7, #FDE68A); color: #92400E; }
+  .tag-since { background: #EDE9FE; color: #6B21A8; }
+  .tag-city { background: #F3F4F6; color: #6B7280; }
+
+  /* Stats strip */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f5f5f5;
+    margin-bottom: 0;
+  }
+  .stat-col {
+    text-align: center;
+  }
+  .stat-col:not(:last-child) { border-right: 1px solid #f0f0f0; }
+  .stat-col .s-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700;
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 2px;
+  }
+  .stat-col .s-label { font-size: 10px; color: #bbb; letter-spacing: 1px; }
+
+  /* Health summary card */
+  .health-card {
+    margin: 14px 20px 0;
+    background: linear-gradient(135deg, #F5F3FF, #EDE9FE);
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid #DDD6FE;
+  }
+  .health-card .hc-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .health-card .hc-title {
+    font-size: 13px; font-weight: 700; color: #4c1d95;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .health-card .hc-more { font-size: 11px; color: #9C6FE4; }
+  .health-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .hm-item {
+    background: rgba(255,255,255,0.7);
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .hm-icon { font-size: 16px; margin-bottom: 4px; }
+  .hm-val { font-size: 14px; font-weight: 700; color: #6B21A8; margin-bottom: 1px; }
+  .hm-label { font-size: 9px; color: #9C6FE4; letter-spacing: 0.5px; }
+
+  /* Device collection */
+  .devices-mini {
+    margin: 14px 20px 0;
+  }
+  .section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .sec-title { font-size: 13px; font-weight: 700; color: #0f0f0f; }
+  .sec-more { font-size: 11px; color: #7C3AED; font-weight: 500; }
+  .device-mini-row { display: flex; gap: 10px; }
+  .device-mini-card {
+    flex: 1;
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .dm-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .dm-name { font-size: 11px; font-weight: 600; color: #1a1a1a; text-align: center; }
+  .dm-status {
+    font-size: 9px; font-weight: 600;
+    padding: 2px 7px; border-radius: 8px;
+  }
+  .dm-on { background: #DCFCE7; color: #166534; }
+  .dm-off { background: #F3F4F6; color: #9CA3AF; }
+
+  /* Menu list */
+  .menu-list {
+    margin: 14px 20px 0;
+  }
+  .menu-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f5f5f5;
+    cursor: pointer;
+  }
+  .menu-item:last-child { border-bottom: none; }
+  .menu-icon-wrap {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  .menu-text { flex: 1; }
+  .menu-title { font-size: 14px; font-weight: 500; color: #1a1a1a; }
+  .menu-sub { font-size: 11px; color: #bbb; margin-top: 1px; }
+  .menu-arrow {
+    color: #ddd; font-size: 16px;
+  }
+  .menu-badge {
+    background: linear-gradient(135deg, #6B21A8, #7C3AED);
+    color: #fff;
+    font-size: 9px; font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-right: 6px;
+  }
+
+  /* Logout */
+  .logout-btn {
+    margin: 14px 20px 20px;
+    width: calc(100% - 40px);
+    padding: 14px;
+    border: 1.5px solid #EDE9FE;
+    border-radius: 14px;
+    background: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    color: #7C3AED;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+
+  /* Responsive scaling — 7 phones */
+  body { align-items: flex-start; padding-top: 12px; }
+  .showcase { gap: 12px; flex-wrap: nowrap; }
+
+  @media (min-width: 2900px) {
+    .showcase { transform: scale(1); transform-origin: top left; }
+  }
+  @media (max-width: 2899px) {
+    .showcase { transform: scale(0.78); transform-origin: top left; }
+  }
+  @media (max-width: 2400px) {
+    .showcase { transform: scale(0.65); transform-origin: top left; }
+  }
+  @media (max-width: 2000px) {
+    .showcase { transform: scale(0.54); transform-origin: top left; }
+  }
+  @media (max-width: 1660px) {
+    .showcase { transform: scale(0.44); transform-origin: top left; }
+  }
+  @media (max-width: 1350px) {
+    .showcase { transform: scale(0.36); transform-origin: top left; }
+  }
+  @media (max-width: 1100px) {
+    .showcase { transform: scale(0.30); transform-origin: top left; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="showcase">
+
+  <!-- =========== PHONE 1: HERO =========== -->
+  <div class="phone-wrap">
+    <div class="phone-frame">
+      <div class="screen p1">
+
+        <!-- Hero area -->
+        <div class="hero-area">
+          <!-- SVG model silhouette -->
+          <svg class="model-silhouette" viewBox="0 0 220 380" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="fig-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:rgba(255,255,255,0.9)"/>
+                <stop offset="100%" style="stop-color:rgba(196,181,253,0.5)"/>
+              </linearGradient>
+            </defs>
+            <!-- Elegant female silhouette, side profile -->
+            <path fill="url(#fig-grad)" d="
+              M110,20 C110,20 100,18 96,24 C92,30 94,38 96,44 C90,46 84,50 82,58 C80,66 84,74 88,78
+              C82,80 76,86 76,96 C76,108 84,114 88,116 L84,140 C80,150 76,162 78,172
+              C80,182 86,188 90,190 L86,230 C82,244 78,260 80,272 C82,284 88,290 90,292
+              L88,330 C87,344 88,356 90,366 C92,370 96,372 100,373
+              L100,373 L120,373 C124,372 128,370 130,366 C132,356 133,344 132,330
+              L130,292 C132,290 138,284 140,272 C142,260 138,244 134,230
+              L130,190 C134,188 140,182 142,172 C144,162 140,150 136,140
+              L132,116 C136,114 144,108 144,96 C144,86 138,80 132,78
+              C136,74 140,66 138,58 C136,50 130,46 124,44 C126,38 128,30 124,24 C120,18 110,20 110,20 Z
+            "/>
+          </svg>
+        </div>
+
+        <!-- Top Nav -->
+        <div class="nav-top" style="background:transparent; border:none;">
+          <div class="nav-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <rect x="2" y="5" width="18" height="1.5" rx="1" fill="white"/>
+              <rect x="2" y="10.25" width="18" height="1.5" rx="1" fill="white"/>
+              <rect x="2" y="15.5" width="12" height="1.5" rx="1" fill="white"/>
+            </svg>
+          </div>
+          <div class="logo-text">
+            <div class="brand" style="color:#fff;">SHAKI</div>
+            <div class="logo-line" style="background:#fff; opacity:0.6;"></div>
+            <div class="since" style="color:rgba(255,255,255,0.7);">SINCE 1995</div>
+          </div>
+          <div class="nav-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M7 2L5 7H2l1.5 9h15L20 7h-3L15 2H7Z" stroke="white" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+              <circle cx="8.5" cy="14" r="1" fill="white"/>
+              <circle cx="13.5" cy="14" r="1" fill="white"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Hero content -->
+        <div class="hero-content">
+          <div class="hero-accent"></div>
+          <div class="hero-title">FEEL THE<br>PLEASURE</div>
+          <div class="hero-sub">Discover your desire</div>
+        </div>
+
+        <!-- CTA row -->
+        <div class="cta-row">
+          <button class="btn-primary">探索系列</button>
+          <button class="btn-outline" style="border-color:rgba(255,255,255,0.7); color:#fff;">了解更多</button>
+        </div>
+
+        <!-- Carousel -->
+        <div class="carousel-section">
+          <div class="carousel-title">热门产品</div>
+          <div class="carousel-row">
+            <div class="product-card">
+              <div class="img-area">
+                <svg viewBox="0 0 60 60" fill="none"><ellipse cx="30" cy="30" rx="18" ry="10" stroke="rgba(124,58,237,0.4)" stroke-width="2"/><ellipse cx="30" cy="30" rx="10" ry="18" stroke="rgba(124,58,237,0.4)" stroke-width="2"/></svg>
+              </div>
+              <div class="card-body">
+                <div class="pname">Velvet Pro</div>
+                <div class="price-row">
+                  <span class="price">¥ 899</span>
+                  <div class="add-btn">+</div>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="img-area" style="background:linear-gradient(135deg,#F3E8FF,#E9D5FF,#D8B4FE);">
+                <svg viewBox="0 0 60 60" fill="none"><circle cx="30" cy="24" r="14" stroke="rgba(109,40,217,0.4)" stroke-width="2"/><path d="M16 44 Q30 36 44 44" stroke="rgba(109,40,217,0.4)" stroke-width="2" fill="none"/></svg>
+              </div>
+              <div class="card-body">
+                <div class="pname">Luna Silk</div>
+                <div class="price-row">
+                  <span class="price">¥ 1,299</span>
+                  <div class="add-btn">+</div>
+                </div>
+              </div>
+            </div>
+            <div class="product-card">
+              <div class="img-area" style="background:linear-gradient(135deg,#E0D7FF,#C4B5FD,#A78BFA);">
+                <svg viewBox="0 0 60 60" fill="none"><rect x="20" y="15" width="20" height="30" rx="10" stroke="rgba(139,92,246,0.5)" stroke-width="2"/><line x1="30" y1="10" x2="30" y2="50" stroke="rgba(139,92,246,0.3)" stroke-width="1.5"/></svg>
+              </div>
+              <div class="card-body">
+                <div class="pname">Nova BT</div>
+                <div class="price-row">
+                  <span class="price">¥ 1,599</span>
+                  <div class="add-btn">+</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dots">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" fill="#7C3AED"/></svg>
+            <span>首页</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#bbb" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>探索</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 2 6 6 6 9c0 4 2 6 4 7v3h4v-3c2-1 4-3 4-7 0-3-2-7-6-7z" stroke="#bbb" stroke-width="1.8" fill="none"/><path d="M10 9l1.5-3L13 9l-1.5 3L10 9z" stroke="#bbb" stroke-width="1.2"/></svg>
+            <span>蓝牙</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 4 15 4 9a8 8 0 0116 0c0 6-8 12-8 12z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>心率</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#bbb" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>我的</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="screen-label">01 · HERO</div>
+  </div>
+
+  <!-- =========== PHONE 2: EXPLORE =========== -->
+  <div class="phone-wrap">
+    <div class="phone-frame">
+      <div class="screen p2">
+
+        <div class="nav-top">
+          <div style="width:40px;"></div>
+          <div class="logo-text">
+            <div class="brand">SHAKI</div>
+            <div class="logo-line"></div>
+            <div class="since">SINCE 1995</div>
+          </div>
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <path d="M4 6h16M4 12h10M4 18h7" stroke="#333" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="page-content">
+          <div class="page-header">
+            <div class="page-title">探索</div>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#333" stroke-width="1.8"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="#333" stroke-width="1.8"/>
+            </svg>
+          </div>
+
+          <div class="search-bar">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="#7C3AED" stroke-width="1.8"/>
+              <path d="M20 20l-3-3" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <input placeholder="搜索产品..." />
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+              <line x1="4" y1="6" x2="20" y2="6" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="6" y1="12" x2="18" y2="12" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="10" y1="18" x2="14" y2="18" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="tags-row">
+            <div class="tag active">全部</div>
+            <div class="tag inactive">智能设备</div>
+            <div class="tag inactive">经典系列</div>
+            <div class="tag inactive">情侣互动</div>
+            <div class="tag inactive">配件</div>
+          </div>
+
+          <div class="products-grid">
+            <!-- Card 1 with NEW badge -->
+            <div class="grid-card">
+              <div class="img-area">
+                <div class="new-badge">NEW</div>
+                <svg viewBox="0 0 80 100" width="60" height="75" fill="none">
+                  <ellipse cx="40" cy="50" rx="24" ry="14" stroke="rgba(124,58,237,0.35)" stroke-width="2"/>
+                  <ellipse cx="40" cy="50" rx="14" ry="24" stroke="rgba(124,58,237,0.35)" stroke-width="2"/>
+                  <circle cx="40" cy="50" r="5" fill="rgba(124,58,237,0.2)"/>
+                </svg>
+              </div>
+              <div class="card-footer">
+                <div class="pname">Velvet Pro S2</div>
+                <div class="price-row">
+                  <span class="price">¥ 1,199</span>
+                  <div class="heart-btn">
+                    <svg viewBox="0 0 20 18" width="18" height="18" fill="none">
+                      <path d="M10 16s-8-5.5-8-10A5 5 0 0110 4.1 5 5 0 0118 6c0 4.5-8 10-8 10z" stroke="#ddd" stroke-width="1.5"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="grid-card">
+              <div class="img-area" style="background:linear-gradient(160deg,#F3E8FF,#E9D5FF,#D8B4FE);">
+                <svg viewBox="0 0 80 100" width="60" height="75" fill="none">
+                  <circle cx="40" cy="40" r="20" stroke="rgba(109,40,217,0.35)" stroke-width="2"/>
+                  <path d="M20 65 Q40 55 60 65" stroke="rgba(109,40,217,0.35)" stroke-width="2" fill="none"/>
+                  <circle cx="40" cy="40" r="6" fill="rgba(109,40,217,0.15)"/>
+                </svg>
+              </div>
+              <div class="card-footer">
+                <div class="pname">Luna Noir</div>
+                <div class="price-row">
+                  <span class="price">¥ 899</span>
+                  <div class="heart-btn">
+                    <svg viewBox="0 0 20 18" width="18" height="18" fill="none">
+                      <path d="M10 16s-8-5.5-8-10A5 5 0 0110 4.1 5 5 0 0118 6c0 4.5-8 10-8 10z" stroke="#ddd" stroke-width="1.5"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="grid-card">
+              <div class="img-area" style="background:linear-gradient(160deg,#EDE9FE,#C4B5FD,#A78BFA);">
+                <svg viewBox="0 0 80 100" width="60" height="75" fill="none">
+                  <rect x="28" y="20" width="24" height="44" rx="12" stroke="rgba(139,92,246,0.4)" stroke-width="2"/>
+                  <line x1="40" y1="14" x2="40" y2="70" stroke="rgba(139,92,246,0.25)" stroke-width="1.5"/>
+                  <circle cx="40" cy="50" r="4" fill="rgba(139,92,246,0.2)"/>
+                </svg>
+              </div>
+              <div class="card-footer">
+                <div class="pname">Nova Slim</div>
+                <div class="price-row">
+                  <span class="price">¥ 699</span>
+                  <div class="heart-btn">
+                    <svg viewBox="0 0 20 18" width="18" height="18" fill="none">
+                      <path d="M10 16s-8-5.5-8-10A5 5 0 0110 4.1 5 5 0 0118 6c0 4.5-8 10-8 10z" fill="#EDE9FE" stroke="#C4B5FD" stroke-width="1.5"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="grid-card">
+              <div class="img-area" style="background:linear-gradient(160deg,#F5F3FF,#DDD6FE,#C4B5FD);">
+                <svg viewBox="0 0 80 100" width="60" height="75" fill="none">
+                  <path d="M40 20 Q58 30 58 45 Q58 60 40 75 Q22 60 22 45 Q22 30 40 20Z" stroke="rgba(124,58,237,0.35)" stroke-width="2" fill="rgba(124,58,237,0.06)"/>
+                  <circle cx="40" cy="46" r="6" fill="rgba(124,58,237,0.15)"/>
+                </svg>
+              </div>
+              <div class="card-footer">
+                <div class="pname">Duo Connect</div>
+                <div class="price-row">
+                  <span class="price">¥ 1,599</span>
+                  <div class="heart-btn">
+                    <svg viewBox="0 0 20 18" width="18" height="18" fill="none">
+                      <path d="M10 16s-8-5.5-8-10A5 5 0 0110 4.1 5 5 0 0118 6c0 4.5-8 10-8 10z" stroke="#ddd" stroke-width="1.5"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>首页</span>
+          </div>
+          <div class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#7C3AED" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>探索</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 2 6 6 6 9c0 4 2 6 4 7v3h4v-3c2-1 4-3 4-7 0-3-2-7-6-7z" stroke="#bbb" stroke-width="1.8" fill="none"/><path d="M10 9l1.5-3L13 9l-1.5 3L10 9z" stroke="#bbb" stroke-width="1.2"/></svg>
+            <span>蓝牙</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 4 15 4 9a8 8 0 0116 0c0 6-8 12-8 12z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>心率</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#bbb" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>我的</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="screen-label">02 · EXPLORE</div>
+  </div>
+
+  <!-- =========== PHONE 3: BLUETOOTH =========== -->
+  <div class="phone-wrap">
+    <div class="phone-frame">
+      <div class="screen p3">
+
+        <div class="back-nav">
+          <div class="back-btn">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <path d="M19 12H5M12 5l-7 7 7 7" stroke="#333" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="page-title">设备连接</span>
+        </div>
+
+        <!-- Pulse animation center -->
+        <div class="bt-center">
+          <div class="pulse-rings">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="bt-core">
+              <!-- Bluetooth SVG icon -->
+              <svg viewBox="0 0 28 28" width="34" height="34" fill="none">
+                <path d="M8 8l12 12-6 6V2l6 6L8 20" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="searching-text">正在搜索设备<span class="dots-anim"></span></div>
+        </div>
+
+        <!-- Devices -->
+        <div class="devices-section">
+          <div class="section-label">附近设备</div>
+
+          <div class="device-card">
+            <div class="device-icon connected">
+              <svg viewBox="0 0 28 28" width="24" height="24" fill="none">
+                <path d="M8 8l12 12-6 6V2l6 6L8 20" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="device-info">
+              <div class="device-name">SHAKI Pro S1</div>
+              <div class="device-status">
+                <div class="status-dot green"></div>
+                <span class="status-connected">已连接</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <div class="signal-bars">
+                <div class="bar" style="height:6px;"></div>
+                <div class="bar" style="height:10px;"></div>
+                <div class="bar" style="height:14px;"></div>
+                <div class="bar" style="height:18px;"></div>
+              </div>
+              <div style="background:linear-gradient(135deg,#EDE9FE,#DDD6FE);border-radius:10px;padding:2px 8px;font-size:9px;font-weight:700;color:#6B21A8;letter-spacing:0.5px;white-space:nowrap;">心率同步 ON</div>
+            </div>
+          </div>
+
+          <div class="device-card">
+            <div class="device-icon disconnected">
+              <svg viewBox="0 0 28 28" width="24" height="24" fill="none">
+                <path d="M8 8l12 12-6 6V2l6 6L8 20" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="device-info">
+              <div class="device-name">SHAKI Mini</div>
+              <div class="device-status">
+                <div class="status-dot gray"></div>
+                <span class="status-disconnected">点击连接 ›</span>
+              </div>
+            </div>
+            <div class="signal-bars">
+              <div class="bar" style="height:6px; background:#ddd;"></div>
+              <div class="bar" style="height:10px; background:#ddd;"></div>
+              <div class="bar" style="height:14px; background:#eee;"></div>
+              <div class="bar" style="height:18px; background:#f5f5f5;"></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="add-device-btn">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="none">
+            <path d="M10 4v12M4 10h12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          添加新设备
+        </button>
+
+        <!-- Bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>首页</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#bbb" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>探索</span>
+          </div>
+          <div class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 2 6 6 6 9c0 4 2 6 4 7v3h4v-3c2-1 4-3 4-7 0-3-2-7-6-7z" stroke="#7C3AED" stroke-width="1.8" fill="none"/><path d="M10 9l1.5-3L13 9l-1.5 3L10 9z" stroke="#7C3AED" stroke-width="1.2"/></svg>
+            <span>蓝牙</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 4 15 4 9a8 8 0 0116 0c0 6-8 12-8 12z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>心率</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#bbb" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>我的</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="screen-label">03 · BLUETOOTH</div>
+  </div>
+
+  <!-- =========== PHONE 4: HEART RATE =========== -->
+  <div class="phone-wrap">
+    <div class="phone-frame">
+      <div class="screen p4">
+
+        <div class="nav-top">
+          <div style="width:40px;"></div>
+          <div class="logo-text">
+            <div class="brand">SHAKI</div>
+            <div class="logo-line"></div>
+            <div class="since">SINCE 1995</div>
+          </div>
+          <div style="width:40px;"></div>
+        </div>
+
+        <div class="page-content">
+          <div class="page-header">
+            <div class="page-title">心率监测</div>
+            <div class="live-badge">
+              <div class="live-dot"></div>
+              直播中
+            </div>
+          </div>
+
+          <!-- Main HR card -->
+          <div class="hr-card">
+            <div class="hr-label">当前心率</div>
+            <div class="hr-value-row">
+              <div class="hr-number">86</div>
+              <div class="hr-unit">BPM</div>
+            </div>
+
+            <!-- AI Sync status line -->
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;padding:7px 12px;background:#F5F3FF;border-radius:10px;">
+              <span style="font-size:14px;">〜</span>
+              <span style="font-size:12px;font-weight:600;background:linear-gradient(135deg,#6B21A8,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">AI 律动同步中 · SHAKI Pro S1</span>
+              <div style="width:6px;height:6px;border-radius:50%;background:#22c55e;animation:live-pulse 1.2s ease-in-out infinite;margin-left:auto;"></div>
+            </div>
+
+            <!-- Wave -->
+            <div class="wave-container">
+              <svg class="wave-svg" width="800" height="80" viewBox="0 0 800 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Repeating ECG pattern (two copies for seamless loop) -->
+                <polyline
+                  stroke="#7C3AED"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  fill="none"
+                  points="
+                    0,42 20,42 30,42 32,38 34,42 40,42
+                    45,42 47,20 49,68 51,15 53,42
+                    58,42 70,42 72,38 74,42 80,42
+                    100,42 105,42 107,20 109,68 111,15 113,42
+                    118,42 130,42 132,38 134,42 140,42
+                    160,42 165,42 167,20 169,68 171,15 173,42
+                    178,42 190,42 192,38 194,42 200,42
+                    220,42 225,42 227,20 229,68 231,15 233,42
+                    238,42 250,42 252,38 254,42 260,42
+                    280,42 285,42 287,20 289,68 291,15 293,42
+                    298,42 310,42 312,38 314,42 320,42
+                    340,42 345,42 347,20 349,68 351,15 353,42
+                    358,42 370,42 372,38 374,42 380,42
+                    400,42 405,42 407,20 409,68 411,15 413,42
+                    418,42 430,42 432,38 434,42 440,42
+                    460,42 465,42 467,20 469,68 471,15 473,42
+                    478,42 490,42 492,38 494,42 500,42
+                    520,42 525,42 527,20 529,68 531,15 533,42
+                    538,42 550,42 552,38 554,42 560,42
+                    580,42 585,42 587,20 589,68 591,15 593,42
+                    598,42 610,42 612,38 614,42 620,42
+                    640,42 645,42 647,20 649,68 651,15 653,42
+                    658,42 670,42 672,38 674,42 680,42
+                    700,42 705,42 707,20 709,68 711,15 713,42
+                    718,42 730,42 732,38 734,42 740,42
+                    760,42 765,42 767,20 769,68 771,15 773,42
+                    778,42 790,42 792,38 794,42 800,42
+                  "
+                />
+              </svg>
+            </div>
+
+            <!-- Stats -->
+            <div class="hr-stats">
+              <div class="stat-item">
+                <div class="stat-label">MIN</div>
+                <div class="stat-val">62</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">AVG</div>
+                <div class="stat-val">78</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">MAX</div>
+                <div class="stat-val">112</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trend card -->
+          <div class="trend-card">
+            <div class="card-title">7日趋势</div>
+            <div class="bar-chart">
+              <div class="bar-col">
+                <div class="bar-fill" style="height:45px;"></div>
+                <div class="bar-label">Mon</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill" style="height:55px;"></div>
+                <div class="bar-label">Tue</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill" style="height:38px;"></div>
+                <div class="bar-label">Wed</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill" style="height:62px;"></div>
+                <div class="bar-label">Thu</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill" style="height:50px;"></div>
+                <div class="bar-label">Fri</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill" style="height:42px;"></div>
+                <div class="bar-label">Sat</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill today" style="height:58px;"></div>
+                <div class="bar-label" style="color:#7C3AED; font-weight:600;">Sun</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mood card -->
+          <div class="mood-card">
+            <div class="mood-circle">
+              <svg viewBox="0 0 80 80">
+                <defs>
+                  <linearGradient id="mood-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#6B21A8"/>
+                    <stop offset="100%" style="stop-color:#A78BFA"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="40" cy="40" r="32" stroke="#F0EEFF" stroke-width="7" fill="none"/>
+                <circle cx="40" cy="40" r="32"
+                  stroke="url(#mood-grad)" stroke-width="7" fill="none"
+                  stroke-dasharray="200.96"
+                  stroke-dashoffset="44.2"
+                  stroke-linecap="round"/>
+              </svg>
+              <div class="mood-center">
+                <div class="mood-pct">78%</div>
+              </div>
+            </div>
+            <div class="mood-info">
+              <div class="mood-title">愉悦指数 💜</div>
+              <div class="mood-sub">今日状态良好<br>较昨日提升 +12%</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>首页</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#bbb" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>探索</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 2 6 6 6 9c0 4 2 6 4 7v3h4v-3c2-1 4-3 4-7 0-3-2-7-6-7z" stroke="#bbb" stroke-width="1.8" fill="none"/><path d="M10 9l1.5-3L13 9l-1.5 3L10 9z" stroke="#bbb" stroke-width="1.2"/></svg>
+            <span>蓝牙</span>
+          </div>
+          <div class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 4 15 4 9a8 8 0 0116 0c0 6-8 12-8 12z" fill="#7C3AED"/></svg>
+            <span>心率</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#bbb" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>我的</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="screen-label">04 · HEART RATE</div>
+  </div>
+
+
+  <!-- =========== PHONE 5: AI SYNC =========== -->
+  <div class="phone-wrap">
+    <div class="phone-frame">
+      <div class="screen p5">
+
+        <!-- Top nav -->
+        <div class="sync-nav">
+          <div class="back-btn">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <path d="M19 12H5M12 5l-7 7 7 7" stroke="#333" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="nav-title">AI 律动 · 同步中</span>
+          <div class="connected-pill">
+            <div class="cdot"></div>
+            已连接
+          </div>
+        </div>
+
+        <!-- Data flow banner -->
+        <div class="sync-banner">
+          <div class="bt-icon-sm">
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="none">
+              <path d="M5 5l10 10-5 5V0l5 5L5 15" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="banner-info">
+            <div class="banner-dev">SHAKI Pro S1</div>
+            <div class="banner-sub">心率数据实时传输中…</div>
+          </div>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+            <path d="M5 12h14M15 7l5 5-5 5" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="flow-line"></div>
+        </div>
+
+        <!-- Page content -->
+        <div class="page-content">
+
+          <!-- Main Dial -->
+          <div class="dial-wrap">
+            <div class="dial-container">
+              <div class="dial-ring"></div>
+              <div class="dial-ring"></div>
+              <div class="dial-ring"></div>
+
+              <!-- SVG arc progress (86 BPM / 180 BPM max → ~47.8%) -->
+              <svg class="dial-svg" viewBox="0 0 220 220">
+                <defs>
+                  <linearGradient id="arc-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#6B21A8"/>
+                    <stop offset="100%" style="stop-color:#A78BFA"/>
+                  </linearGradient>
+                </defs>
+                <!-- Track -->
+                <circle cx="110" cy="110" r="100" stroke="#EDE9FE" stroke-width="8" fill="none"/>
+                <!-- Progress arc: circumference = 2π×100 ≈ 628.3; 47.8% = 300.3 filled, offset = 628.3-300.3 = 328 -->
+                <circle cx="110" cy="110" r="100"
+                  stroke="url(#arc-grad)" stroke-width="8" fill="none"
+                  stroke-dasharray="628.3"
+                  stroke-dashoffset="328"
+                  stroke-linecap="round"/>
+              </svg>
+
+              <div class="dial-core">
+                <div class="dial-bpm-label">❤️ BPM</div>
+                <div class="dial-bpm-val">86</div>
+                <div class="dial-freq">〜 中等律动</div>
+              </div>
+
+              <!-- Freq bar right -->
+              <div class="freq-bar-wrap">
+                <div class="freq-seg"></div>
+                <div class="freq-seg"></div>
+                <div class="freq-seg"></div>
+                <div class="freq-seg"></div>
+                <div class="freq-seg"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BPM Zone legend -->
+          <div class="zone-row">
+            <div class="zone-chip" style="background:#F0FDF4;">
+              <div class="zone-range" style="color:#16a34a;">60–75</div>
+              <div class="zone-name" style="color:#166534;">轻柔</div>
+              <div class="zone-freq" style="color:#4ade80;">6 Hz</div>
+            </div>
+            <div class="zone-chip" style="background:#EDE9FE; border:1.5px solid #C4B5FD;">
+              <div class="zone-range" style="color:#6B21A8;">76–100</div>
+              <div class="zone-name" style="color:#4c1d95;">中等 ●</div>
+              <div class="zone-freq" style="color:#7C3AED;">12 Hz</div>
+            </div>
+            <div class="zone-chip" style="background:#FFF1F2;">
+              <div class="zone-range" style="color:#be123c;">101+</div>
+              <div class="zone-name" style="color:#9f1239;">激烈</div>
+              <div class="zone-freq" style="color:#f43f5e;">20 Hz</div>
+            </div>
+          </div>
+
+          <!-- Mode selector -->
+          <div class="mode-row">
+            <div class="mode-card active">
+              <div class="mode-icon">🔄</div>
+              <div class="mode-name">跟随</div>
+              <div class="mode-desc">实时跟随<br>心率变化</div>
+            </div>
+            <div class="mode-card">
+              <div class="mode-icon">📈</div>
+              <div class="mode-name">渐强</div>
+              <div class="mode-desc">心率升高<br>持续增强</div>
+            </div>
+            <div class="mode-card">
+              <div class="mode-icon">🎵</div>
+              <div class="mode-name">节拍</div>
+              <div class="mode-desc">按心跳<br>精准同步</div>
+            </div>
+          </div>
+
+          <!-- Data flow cards -->
+          <div class="data-row">
+            <div class="data-card">
+              <div class="dc-label">心率信号</div>
+              <div class="dc-val">86 <span style="font-size:13px;color:#aaa;-webkit-text-fill-color:#aaa;">BPM</span></div>
+              <div class="mini-ecg">
+                <svg width="280" height="28" viewBox="0 0 280 28" fill="none" style="animation: wave-scroll 2.5s linear infinite;">
+                  <polyline stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round" fill="none"
+                    points="0,14 12,14 16,11 18,14 24,14 26,4 28,24 30,2 32,14 40,14 42,11 44,14 50,14 52,4 54,24 56,2 58,14 66,14 68,11 70,14 76,14 78,4 80,24 82,2 84,14 92,14 94,11 96,14 102,14 104,4 106,24 108,2 110,14 118,14 120,11 122,14 128,14 130,4 132,24 134,2 136,14 140,14"/>
+                  <polyline stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round" fill="none"
+                    points="140,14 152,14 156,11 158,14 164,14 166,4 168,24 170,2 172,14 180,14 182,11 184,14 190,14 192,4 194,24 196,2 198,14 206,14 208,11 210,14 216,14 218,4 220,24 222,2 224,14 232,14 234,11 236,14 242,14 244,4 246,24 248,2 250,14 258,14 260,11 262,14 268,14 270,4 272,24 274,2 276,14 280,14"/>
+                </svg>
+              </div>
+              <div class="dc-sub" style="margin-top:4px;">趋势 <span class="trend-up">↑ +8%</span></div>
+            </div>
+            <div class="data-card">
+              <div class="dc-label">设备频率</div>
+              <div class="dc-val">12 <span style="font-size:13px;color:#aaa;-webkit-text-fill-color:#aaa;">Hz</span></div>
+              <div class="mini-eq">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+              </div>
+              <div class="dc-sub" style="margin-top:4px;">中等律动</div>
+            </div>
+          </div>
+
+          <!-- Intensity slider -->
+          <div class="intensity-card">
+            <div class="intensity-header">
+              <div class="intensity-title">强度微调</div>
+              <div class="intensity-val">62%</div>
+            </div>
+            <div class="slider-wrap">
+              <div class="slider-fill"></div>
+              <div class="slider-thumb"></div>
+            </div>
+            <div class="slider-labels">
+              <span>轻柔</span>
+              <span>强烈</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>首页</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#bbb" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>探索</span>
+          </div>
+          <div class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3C9 3 7 5 6 7" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M12 3C15 3 17 5 18 7" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M4 12C4 8 6 5 9 4" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M20 12C20 8 18 5 15 4" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="12" cy="13" r="3" fill="#7C3AED"/>
+              <path d="M12 16v4" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <span>AI律动</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 4 15 4 9a8 8 0 0116 0c0 6-8 12-8 12z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>心率</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#bbb" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>我的</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="screen-label">05 · AI SYNC</div>
+  </div>
+
+  <!-- =========== PHONE 6: COUPLE SYNC =========== -->
+  <div class="phone-wrap">
+    <div class="phone-frame">
+      <div class="screen p6">
+
+        <div class="couple-nav">
+          <div class="back-btn">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <path d="M19 12H5M12 5l-7 7 7 7" stroke="#333" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="nav-title">情侣同步</span>
+          <div class="online-pill">
+            <div class="odot"></div>
+            连接中
+          </div>
+        </div>
+
+        <div class="page-content">
+
+          <div class="dist-banner">
+            <div class="dist-icon">🌏</div>
+            <div class="dist-info">
+              <div class="dist-val">1,247 km</div>
+              <div class="dist-sub">上海 → 北京 · 实时同步</div>
+            </div>
+            <div class="dist-ping">延迟 42ms</div>
+          </div>
+
+          <div class="couple-orbs">
+            <div class="orb-wrap">
+              <div style="position:relative;">
+                <div class="orb orb-me">
+                  <div class="orb-pulse"></div>
+                  <div class="orb-pulse" style="inset:-18px; border-color:rgba(107,33,168,0.12); animation-delay:0.4s;"></div>
+                  <div class="orb-bpm">86</div>
+                  <div class="orb-unit">BPM</div>
+                </div>
+              </div>
+              <div class="orb-name">我</div>
+              <div class="orb-label" style="font-size:10px; color:#7C3AED;">💜 12 Hz</div>
+            </div>
+
+            <div class="bridge-wrap">
+              <div class="bridge-line">
+                <div class="bridge-dot"></div>
+              </div>
+              <div class="bridge-tag">心率同步 ♡</div>
+            </div>
+
+            <div class="orb-wrap">
+              <div style="position:relative;">
+                <div class="orb orb-partner">
+                  <div class="orb-pulse" style="border-color:rgba(192,132,252,0.3);"></div>
+                  <div class="orb-pulse" style="inset:-18px; border-color:rgba(192,132,252,0.15); animation-delay:0.4s;"></div>
+                  <div class="orb-bpm">94</div>
+                  <div class="orb-unit">BPM</div>
+                </div>
+              </div>
+              <div class="orb-name">Ta</div>
+              <div class="orb-label" style="font-size:10px; color:#9D4EDD;">💜 15 Hz</div>
+            </div>
+          </div>
+
+          <div style="font-size:11px; color:#bbb; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;">同步模式</div>
+          <div class="sync-modes">
+            <div class="sync-mode-card active">
+              <div class="sm-icon">❤️</div>
+              <div class="sm-name">心跳镜像<span class="active-dot"></span></div>
+              <div class="sm-desc">对方心率驱动<br>我的设备律动</div>
+            </div>
+            <div class="sync-mode-card">
+              <div class="sm-icon">🔄</div>
+              <div class="sm-name">双向互控</div>
+              <div class="sm-desc">互相控制<br>对方设备强度</div>
+            </div>
+            <div class="sync-mode-card">
+              <div class="sm-icon">🎵</div>
+              <div class="sm-name">共鸣节拍</div>
+              <div class="sm-desc">两颗心跳<br>合并为一个节拍</div>
+            </div>
+            <div class="sync-mode-card">
+              <div class="sm-icon">🌊</div>
+              <div class="sm-name">情绪涌浪</div>
+              <div class="sm-desc">AI 感知情绪<br>动态编排律动</div>
+            </div>
+          </div>
+
+          <div class="msg-strip">
+            <div class="ms-label">心跳对话</div>
+            <div class="msg-bubble">
+              <div class="msg-avatar partner">💜</div>
+              <div class="msg-text">感受到你的心跳了 🌙</div>
+            </div>
+            <div class="msg-bubble right">
+              <div class="msg-avatar me">♡</div>
+              <div class="msg-text">我也是，一直都在～</div>
+            </div>
+            <div class="msg-bubble">
+              <div class="msg-avatar partner">💜</div>
+              <div class="msg-text" style="display:flex; align-items:center; gap:6px;">
+                <span>心率飙了</span><span style="font-size:16px;">💓</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="shared-ctrl">
+            <div class="sc-header">
+              <div class="sc-title">互相控制模式</div>
+              <div class="sc-toggle"></div>
+            </div>
+            <div class="sc-desc">
+              开启后，Ta 可远程调整你的设备强度<br>
+              你也可以实时感受 Ta 的每一次心跳律动
+            </div>
+          </div>
+
+        </div>
+
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>首页</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#bbb" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>探索</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 2 6 6 6 9c0 4 2 6 4 7v3h4v-3c2-1 4-3 4-7 0-3-2-7-6-7z" stroke="#bbb" stroke-width="1.8" fill="none"/><path d="M10 9l1.5-3L13 9l-1.5 3L10 9z" stroke="#bbb" stroke-width="1.2"/></svg>
+            <span>蓝牙</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 4 15 4 9a8 8 0 0116 0c0 6-8 12-8 12z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>心率</span>
+          </div>
+          <div class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" fill="#7C3AED"/>
+            </svg>
+            <span>情侣</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="screen-label">06 · COUPLE SYNC</div>
+  </div>
+
+  <!-- =========== PHONE 7: PROFILE =========== -->
+  <div class="phone-wrap">
+    <div class="phone-frame">
+      <div class="screen p7">
+
+        <div class="page-content">
+
+          <!-- Cover -->
+          <div class="profile-cover">
+            <!-- Decorative circles -->
+            <div class="cover-deco" style="width:180px;height:180px;top:-60px;right:-40px;"></div>
+            <div class="cover-deco" style="width:100px;height:100px;bottom:20px;left:-20px;"></div>
+            <div class="cover-deco" style="width:60px;height:60px;top:40px;left:60px; background:rgba(255,255,255,0.08);"></div>
+            <!-- Settings icon top right -->
+            <div style="position:absolute;top:16px;right:16px;z-index:3;">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+                <svg viewBox="0 0 22 22" width="18" height="18" fill="none">
+                  <circle cx="11" cy="11" r="3" stroke="white" stroke-width="1.6"/>
+                  <path d="M11 2v2M11 18v2M2 11h2M18 11h2M4.93 4.93l1.41 1.41M15.66 15.66l1.41 1.41M4.93 17.07l1.41-1.41M15.66 6.34l1.41-1.41" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+            <!-- Notification icon -->
+            <div style="position:absolute;top:16px;right:60px;z-index:3;">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+                <svg viewBox="0 0 22 22" width="18" height="18" fill="none">
+                  <path d="M18 8A7 7 0 106 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="white" stroke-width="1.6"/>
+                  <path d="M13.73 21a2 2 0 01-3.46 0" stroke="white" stroke-width="1.6"/>
+                  <circle cx="16" cy="5" r="3" fill="#7C3AED" stroke="white" stroke-width="1.5"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Avatar row -->
+          <div class="avatar-row">
+            <div class="avatar-ring">
+              <div class="avatar-inner">👤</div>
+              <div class="vip-badge">★</div>
+            </div>
+            <button class="edit-btn-profile">编辑资料</button>
+          </div>
+
+          <!-- User info -->
+          <div class="user-info">
+            <div class="user-name">Aria S.</div>
+            <div class="user-handle">@aria_shaki · 上海</div>
+            <div class="user-tags">
+              <span class="user-tag tag-vip">✦ VIP 会员</span>
+              <span class="user-tag tag-since">SINCE 2022</span>
+              <span class="user-tag tag-city">🌙 夜猫子</span>
+            </div>
+          </div>
+
+          <!-- Stats strip -->
+          <div class="stats-strip">
+            <div class="stat-col">
+              <div class="s-val">128</div>
+              <div class="s-label">使用天数</div>
+            </div>
+            <div class="stat-col">
+              <div class="s-val">3</div>
+              <div class="s-label">绑定设备</div>
+            </div>
+            <div class="stat-col">
+              <div class="s-val">86</div>
+              <div class="s-label">平均心率</div>
+            </div>
+          </div>
+
+          <!-- Health summary -->
+          <div class="health-card">
+            <div class="hc-header">
+              <div class="hc-title">
+                <span>❤️</span> 健康摘要
+              </div>
+              <div class="hc-more">查看全部 ›</div>
+            </div>
+            <div class="health-metrics">
+              <div class="hm-item">
+                <div class="hm-icon">💓</div>
+                <div class="hm-val">86</div>
+                <div class="hm-label">当前 BPM</div>
+              </div>
+              <div class="hm-item">
+                <div class="hm-icon">〜</div>
+                <div class="hm-val">12Hz</div>
+                <div class="hm-label">律动频率</div>
+              </div>
+              <div class="hm-item">
+                <div class="hm-icon">💜</div>
+                <div class="hm-val">78%</div>
+                <div class="hm-label">愉悦指数</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- My devices -->
+          <div class="devices-mini">
+            <div class="section-header">
+              <div class="sec-title">我的设备</div>
+              <div class="sec-more">管理 ›</div>
+            </div>
+            <div class="device-mini-row">
+              <div class="device-mini-card">
+                <div class="dm-icon">📡</div>
+                <div class="dm-name">Pro S1</div>
+                <div class="dm-status dm-on">在线</div>
+              </div>
+              <div class="device-mini-card">
+                <div class="dm-icon">🔵</div>
+                <div class="dm-name">Mini</div>
+                <div class="dm-status dm-off">离线</div>
+              </div>
+              <div class="device-mini-card" style="border:1.5px dashed #EDE9FE; box-shadow:none;">
+                <div class="dm-icon" style="background:#F9F9F9; font-size:22px;">＋</div>
+                <div class="dm-name" style="color:#bbb;">添加</div>
+                <div style="height:20px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Menu -->
+          <div class="menu-list">
+            <div class="section-header" style="margin-top:6px;">
+              <div class="sec-title">账户设置</div>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-icon-wrap" style="background:#EDE9FE;">🛍️</div>
+              <div class="menu-text">
+                <div class="menu-title">我的订单</div>
+                <div class="menu-sub">查看购买记录与物流</div>
+              </div>
+              <span class="menu-badge">2件待收</span>
+              <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-icon-wrap" style="background:#FEF3C7;">💛</div>
+              <div class="menu-text">
+                <div class="menu-title">我的收藏</div>
+                <div class="menu-sub">已收藏 12 件商品</div>
+              </div>
+              <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-icon-wrap" style="background:#F0FDF4;">💌</div>
+              <div class="menu-text">
+                <div class="menu-title">情侣配对</div>
+                <div class="menu-sub">当前与 Ta 远程连接中</div>
+              </div>
+              <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:6px;animation:live-pulse 1.2s ease-in-out infinite;"></div>
+              <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-icon-wrap" style="background:#F5F3FF;">🔒</div>
+              <div class="menu-text">
+                <div class="menu-title">隐私与安全</div>
+                <div class="menu-sub">数据保护 · 已开启</div>
+              </div>
+              <span class="menu-arrow">›</span>
+            </div>
+
+            <div class="menu-item">
+              <div class="menu-icon-wrap" style="background:#FFF1F2;">🎁</div>
+              <div class="menu-text">
+                <div class="menu-title">会员专属福利</div>
+                <div class="menu-sub">本月积分 2,480 pts</div>
+              </div>
+              <span class="menu-badge" style="background:linear-gradient(135deg,#F59E0B,#FBBF24);">VIP</span>
+              <span class="menu-arrow">›</span>
+            </div>
+          </div>
+
+          <!-- Logout -->
+          <button class="logout-btn">
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
+              <path d="M13 3h4a1 1 0 011 1v12a1 1 0 01-1 1h-4" stroke="#7C3AED" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M8 14l4-4-4-4" stroke="#7C3AED" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 10H2" stroke="#7C3AED" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            退出登录
+          </button>
+
+        </div>
+
+        <!-- Bottom nav -->
+        <div class="bottom-nav">
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>首页</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#bbb" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="#bbb" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>探索</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C8 2 6 6 6 9c0 4 2 6 4 7v3h4v-3c2-1 4-3 4-7 0-3-2-7-6-7z" stroke="#bbb" stroke-width="1.8" fill="none"/><path d="M10 9l1.5-3L13 9l-1.5 3L10 9z" stroke="#bbb" stroke-width="1.2"/></svg>
+            <span>蓝牙</span>
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 4 15 4 9a8 8 0 0116 0c0 6-8 12-8 12z" stroke="#bbb" stroke-width="1.8" fill="none"/></svg>
+            <span>心率</span>
+          </div>
+          <div class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="8" r="4" fill="#7C3AED"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <span>我的</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="screen-label">07 · PROFILE</div>
+  </div>
+
+</div>
+
+</body>
+</html>
