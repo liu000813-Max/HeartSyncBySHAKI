@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AppContext } from './app-context'
-import { connectDevice, disconnectDevice, scanDevices } from '../services/deviceService'
+import {
+  connectDevice,
+  disconnectDevice,
+  scanDevices,
+  stopDeviceCommand,
+  supportsWebBluetooth,
+  writeDeviceCommand,
+} from '../services/deviceService'
 
 const mainRoutes = new Set(['home', 'explore', 'device', 'records', 'ai', 'couple', 'profile'])
 
@@ -13,19 +20,9 @@ export default function AppProvider({ children }) {
   const [route, setRoute] = useState(getInitialRoute)
   const [previousRoute, setPreviousRoute] = useState('home')
   const [favorites, setFavorites] = useState(() => new Set(JSON.parse(localStorage.getItem('shaki-favorites') || '[]')))
-  const [connectedDevice, setConnectedDevice] = useState({
-    id: 'pro-s1',
-    type: 'toy',
-    name: 'SHAKI Pro S1',
-    model: '拾光·悦',
-    battery: 82,
-    signal: 4,
-  })
+  const [connectedDevice, setConnectedDevice] = useState(null)
   const [ringDevice, setRingDevice] = useState(null)
-  const [availableDevices, setAvailableDevices] = useState([
-    { id: 'pro-s1', type: 'toy', name: 'SHAKI Pro S1', model: '智能律动设备', battery: 82, signal: 4 },
-    { id: 'mini', type: 'toy', name: 'SHAKI Mini', model: '便携智能设备', battery: 64, signal: 3 },
-  ])
+  const [availableDevices, setAvailableDevices] = useState([])
   const [scanning, setScanning] = useState(false)
   const [heartRate, setHeartRate] = useState(86)
   const [monitoring, setMonitoring] = useState(true)
@@ -91,27 +88,73 @@ export default function AppProvider({ children }) {
   const startScan = useCallback(async () => {
     setScanning(true)
     setAvailableDevices([])
-    const found = await scanDevices()
-    setAvailableDevices(found)
-    setScanning(false)
-    notify(`发现 ${found.length} 台设备`, 'success')
+    try {
+      const found = await scanDevices()
+      setAvailableDevices(found)
+      if (found.length) notify(`发现 ${found.length} 台真实设备`, 'success')
+      else if (!supportsWebBluetooth()) notify('当前浏览器不支持 Web Bluetooth，请使用最新版 Chrome 的 HTTPS 页面')
+      else notify('没有发现 XQ_ 设备')
+    } catch (error) {
+      if (error?.name === 'NotFoundError') notify('已取消设备选择')
+      else notify(error?.message || '蓝牙扫描失败')
+    } finally {
+      setScanning(false)
+    }
   }, [notify])
 
   const connect = useCallback(async (device) => {
-    notify(`正在连接 ${device.name}`)
-    const result = await connectDevice(device)
-    if (result.type === 'ring') setRingDevice(result)
-    else setConnectedDevice(result)
-    notify(`${device.name} 已连接`, 'success')
+    try {
+      notify(`正在连接 ${device.name}`)
+      const result = await connectDevice(device, {
+        onDisconnected: () => {
+          setConnectedDevice((current) => (current?.id === device.id ? null : current))
+          setRhythmActive(false)
+          notify(`${device.name} 已断开`)
+        },
+      })
+      if (result.type === 'ring') setRingDevice(result)
+      else setConnectedDevice(result)
+      notify(`${device.name} 已连接`, 'success')
+      return result
+    } catch (error) {
+      notify(error?.message || `${device.name} 连接失败`)
+      return null
+    }
   }, [notify])
 
   const disconnect = useCallback(async () => {
     const name = connectedDevice?.name
-    await disconnectDevice()
+    await disconnectDevice(connectedDevice)
     setConnectedDevice(null)
     setRhythmActive(false)
     notify(`${name || '设备'} 已断开`)
   }, [connectedDevice, notify])
+
+  const sendCommand = useCallback(async (options = {}) => {
+    try {
+      const result = await writeDeviceCommand(options)
+      notify(`已发送硬件指令：${result.hex}`, 'success')
+      return result
+    } catch (error) {
+      notify(error?.message || '硬件指令发送失败')
+      return null
+    }
+  }, [notify])
+
+  const stopCommand = useCallback(async () => {
+    try {
+      const result = await stopDeviceCommand()
+      setRhythmActive(false)
+      notify('设备已安全停止', 'success')
+      return result
+    } catch (error) {
+      setRhythmActive(false)
+      notify(error?.message || '设备停止失败')
+      return null
+    }
+  }, [notify])
+
+  const hardwareControlAvailable = connectedDevice?.mode === 'hardware'
 
   const value = useMemo(() => ({
     route,
@@ -127,6 +170,9 @@ export default function AppProvider({ children }) {
     startScan,
     connect,
     disconnect,
+    sendCommand,
+    stopCommand,
+    hardwareControlAvailable,
     heartRate,
     monitoring,
     setMonitoring,
@@ -152,7 +198,7 @@ export default function AppProvider({ children }) {
     notify,
   }), [
     route, activeMainRoute, navigate, goBack, favorites, toggleFavorite, connectedDevice, ringDevice,
-    availableDevices, scanning, startScan, connect, disconnect, heartRate, monitoring,
+    availableDevices, scanning, startScan, connect, disconnect, sendCommand, stopCommand, hardwareControlAvailable, heartRate, monitoring,
     intensity, rhythmFrequency, suctionLevel, vibrationLevel, extensionLevel, rhythmMode, rhythmActive, coupleLinked, remoteControlAllowed, toast, notify,
   ])
 

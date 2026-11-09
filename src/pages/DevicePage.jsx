@@ -15,6 +15,7 @@ export default function DevicePage() {
     disconnect,
     monitoring,
     setMonitoring,
+    hardwareControlAvailable,
   } = useApp()
 
   return (
@@ -22,7 +23,7 @@ export default function DevicePage() {
       <PageHeader back title="设备连接" />
 
       <section className="device-stage">
-        <span className="simulation-badge">模拟连接</span>
+        <span className="simulation-badge">{hardwareControlAvailable ? '硬件连接' : '等待真实连接'}</span>
         <MirrorPulse active={Boolean(connectedDevice)} label={connectedDevice ? '已安全连接' : '等待连接'} size="large" />
         <strong>{connectedDevice?.name || '附近没有已连接设备'}</strong>
         <span>{connectedDevice?.model || '扫描并选择你的 SHAKI 设备'}</span>
@@ -104,7 +105,7 @@ export default function DevicePage() {
 
       <section className="privacy-note">
         <ShieldCheck size={19} />
-        <p><strong>隐私连接</strong> 当前为前端模拟，未读取或上传真实蓝牙与生理数据。</p>
+        <p><strong>隐私连接</strong> {hardwareControlAvailable ? '已读取当前设备的 GATT 服务信息，未上传设备数据。' : '未读取或上传真实蓝牙与生理数据。'}</p>
       </section>
     </main>
   )

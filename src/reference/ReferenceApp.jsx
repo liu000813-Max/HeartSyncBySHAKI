@@ -63,6 +63,9 @@ export default function ReferenceApp() {
     toggleFavorite,
     rhythmActive,
     setRhythmActive,
+    sendCommand,
+    stopCommand,
+    hardwareControlAvailable,
     remoteControlAllowed,
     setRemoteControlAllowed,
   } = useApp()
@@ -308,12 +311,19 @@ export default function ReferenceApp() {
       if (label) label.textContent = scanning ? ' 正在搜索设备…' : ' 添加新设备'
     }
 
-    makeActivatable('.p5 .mode-card', (event) => {
+    makeActivatable('.p5 .mode-card', async (event) => {
       const wasActive = event.currentTarget.classList.contains('active') && rhythmActive
       root.querySelectorAll('.p5 .mode-card').forEach((card) => card.classList.remove('active'))
       event.currentTarget.classList.add('active')
-      setRhythmActive(!wasActive)
-      notify(wasActive ? 'AI 律动已暂停' : `已切换${event.currentTarget.querySelector('.mode-name')?.textContent || 'AI'}模式`, 'success')
+      if (wasActive) {
+        await stopCommand()
+        return
+      }
+      const result = await sendCommand({ level: 1, strength: 1 })
+      if (result) {
+        setRhythmActive(true)
+        notify(`已启动${event.currentTarget.querySelector('.mode-name')?.textContent || 'AI'}模式`, 'success')
+      }
     })
     const bannerSub = root.querySelector('.p5 .banner-sub')
     if (bannerSub) bannerSub.textContent = rhythmActive ? '心率数据实时传输中…' : '待机中，点击律动模式开始'
@@ -375,15 +385,22 @@ export default function ReferenceApp() {
         </div>
       `
       homeCarousel.prepend(homeControl)
-      const handleHomeToggle = (event) => {
+      const handleHomeToggle = async (event) => {
         stop(event)
         if (!connectedDevice) {
           navigate('device')
           notify('请先连接设备，再启动 AI 律动')
           return
         }
-        setRhythmActive(!rhythmActive)
-        notify(rhythmActive ? 'AI 律动已暂停' : 'AI 律动已启动', 'success')
+        if (rhythmActive) {
+          await stopCommand()
+          return
+        }
+        const result = await sendCommand({ level: 1, strength: 1 })
+        if (result) {
+          setRhythmActive(true)
+          notify(hardwareControlAvailable ? 'AI 律动已启动' : '模拟 AI 律动已启动', 'success')
+        }
       }
       const handleHomeDetail = () => {
         navigate('ai')
@@ -466,7 +483,7 @@ export default function ReferenceApp() {
             <div class="actuator-kicker">DEVICE CONTROL</div>
             <div class="actuator-title">动作控制</div>
           </div>
-          <span class="simulation-badge">演示控制</span>
+          <span class="simulation-badge">${hardwareControlAvailable ? '硬件启停已接入' : '演示控制'}</span>
         </div>
         <div class="actuator-status">
           <span class="actuator-status-dot ${connectedDevice ? 'is-connected' : ''}"></span>
@@ -487,7 +504,7 @@ export default function ReferenceApp() {
             </div>
           `).join('')}
         </div>
-        <div class="actuator-note">三通道调节仅作用于当前模拟律动</div>
+        <div class="actuator-note">${hardwareControlAvailable ? '硬件启停已连接；吮吸、震动、伸缩通道映射待真机验证' : '三通道调节仅作用于当前模拟律动'}</div>
       `
       const intensityCard = aiPageContent.querySelector('.intensity-card')
       intensityCard?.remove()
@@ -532,7 +549,9 @@ export default function ReferenceApp() {
         setAdaptiveMode(mode)
         notify(`已切换${mode}模式`)
       })
-      listen('.p5 .adaptive-apply', 'click', () => {
+      listen('.p5 .adaptive-apply', 'click', async () => {
+        const result = await sendCommand({ level: 1, strength: 1 })
+        if (!result) return
         setRhythmActive(true)
         setSuctionLevel(54)
         setVibrationLevel(62)
@@ -631,9 +650,13 @@ export default function ReferenceApp() {
       safeStopButton.textContent = rhythmActive ? '安全停止' : '已暂停'
       safeStopButton.disabled = !rhythmActive
       safeStopButton.classList.toggle('is-paused', !rhythmActive)
-      const handleStop = () => {
+      const handleStop = async () => {
+        if (hardwareControlAvailable) {
+          await stopCommand()
+          return
+        }
         setRhythmActive(false)
-        notify('AI 律动已安全停止')
+        notify('模拟 AI 律动已安全停止')
       }
       safeStopButton.addEventListener('click', handleStop)
       cleanups.push(() => safeStopButton.removeEventListener('click', handleStop))
@@ -681,7 +704,7 @@ export default function ReferenceApp() {
 
     applyExploreFilter(searchInput?.value || '', activeCategory)
     return () => cleanups.forEach((cleanup) => cleanup())
-  }, [screenKey, selectedProductId, navigate, goBack, notify, heartRate, rhythmFrequency, setRhythmFrequency, suctionLevel, setSuctionLevel, vibrationLevel, setVibrationLevel, extensionLevel, setExtensionLevel, connectedDevice, ringDevice, availableDevices, scanning, connect, startScan, favorites, toggleFavorite, rhythmActive, setRhythmActive, remoteControlAllowed, setRemoteControlAllowed, adaptiveMode, profileModelOpen])
+  }, [screenKey, selectedProductId, navigate, goBack, notify, heartRate, rhythmFrequency, setRhythmFrequency, suctionLevel, setSuctionLevel, vibrationLevel, setVibrationLevel, extensionLevel, setExtensionLevel, connectedDevice, ringDevice, availableDevices, scanning, connect, startScan, favorites, toggleFavorite, rhythmActive, setRhythmActive, sendCommand, stopCommand, hardwareControlAvailable, remoteControlAllowed, setRemoteControlAllowed, adaptiveMode, profileModelOpen])
 
   return (
     <div className="reference-app">
